@@ -1,28 +1,42 @@
-// import logo from '../logo.svg'; import './App.css'; 
 import React, { Component } from "react";
 import "./App.css";
-// import axios from 'axios';
-import Header from '../Admin/Components/Header/Header';
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import routes from "../router";
 import AllProduct from '../Admin/Components/Product/AllProduct';
+import Login from '../Admin/Components/AdminAccount/login';
+import Content from "../Admin/Components/Container/Content";
+import SignUp from "../Admin/Components/AdminAccount/signup";
+
 
 class App extends Component {
   render() {
     return (
       <Router>
         <div>
-            <Header/>
-            
-          <hr />
           <Switch>
                 <Route exact path="/">
-                {this.showContentMenu(routes)}
-                </Route>            
+                {this.showContentMenu(routes)} 
+                </Route>  
+
                 <Route path="/allproduct">
                 <AllProduct />
                 </Route>
-                <Route path="/editproduct">              
+
+                <Route path="/user">              
+                </Route>
+               
+
+                <Route path="/login">    
+                <Login />         
+                </Route>
+                
+
+                <Route path="/signup">    
+                <SignUp />          
+                </Route>
+
+                <Route path="/usertable"> 
+                   <Content />       
                 </Route>
           </Switch>
         </div>

@@ -1,94 +1,59 @@
-import React from "react";
+import React, {Component} from "react";
 import { Link } from "react-router-dom";
 import "./cssHeader.css";
-const Header = () => {
-  return (
-    <div >
-        <header id="header">    
-          
-            <div id="menu">
-                <ul>
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/allproduct">About </Link></li>
-                    <li><Link to="/addproduct">Dashboard</Link>
-                        <ul className="sub-menu">
-                            <li>WordPress</li>
-                            <li>SEO</li>
-                            <li>Hosting</li>
-                        </ul>
-                    </li>
-                    <li  style={{float: 'right'}}><Link to="/logout">Log out</Link></li>
-                    <li  style={{float: 'right'}}><Link to="/login">Login</Link> </li>
-                </ul>
-            </div>
-          
-        </header>
-        <div id="wrapper">
-            <main>
-                <div id="content">
-                <div className="innertube">
-                <div id="menu">
-                <ul>
-                    <li><Link to="/">Employees</Link></li>
-                    <li><Link to="/allproduct">Drink Table </Link></li>
-                    <li><Link to="/addproduct">Users</Link>
-                        <ul className="sub-menu">
-                            <li>WordPress</li>
-                            <li>SEO</li>
-                            <li>Hosting</li>
-                        </ul>
-                    </li>
-                   
-                </ul>
-            </div>
-                </div>
-                </div>
-            </main>
-            <nav id="nav">
-                <div className="innertube">
-                    <h3>Interface</h3>
-                    <div  id="menu">
-                        <ul>
-                            <li> ADsda
-                                <ul className="sub-menu">
-                                    <li>WordPress</li>
-                                    <li>SEO</li>
-                                    <li>Hosting</li>
-                                </ul>
-                            </li>                        
-                        </ul>
-                    </div>
-                
-                    <h3>Interface</h3>
-                    <div  id="menu">
-                        <ul>
-                            <li> ADsda
-                                <ul className="sub-menu">
-                                        <li>WordPress</li>
-                                        <li>SEO</li>
-                                        <li>Hosting</li>
-                                </ul>
-                            </li>                        
-                        </ul>
-                    </div>
-                    <h3>Interface</h3>
-                    <div  id="menu">
-                        <ul>
-                            <li> ADsda
-                                <ul className="sub-menu">
-                                        <li>WordPress</li>
-                                        <li>SEO</li>
-                                        <li>Hosting</li>
-                                </ul>
-                            </li>                        
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        </div>
-        {/*          */}
-    </div>
-  );
-};
 
+class Header extends Component { 
+    render() {
+        return (
+            <div>
+                
+                <div className="head">
+                    
+                    <nav className="navbar navbar-expand-sm navbar-fixed-top " role="navigation">
+                        <div className="container">
+                            <div id="navbarCollapse" className="navbar-collapse collapse topNarbar" aria-expanded="false">
+                                <ul className="nav navbar-nav ">                       
+                                    <li className="dropdown active">
+                                        <a href="#" className="dropdown-toggle" data-toggle="dropdown">Dashboard </a>  
+                                        <ul className="dropdown-menu" role="menu">
+                                            <a className="dropdown-toggle" data-toggle="dropdown"></a>
+                                            <li>
+                                                <a href="#" className="dropdown-toggle" data-toggle="dropdown"><Link to="usertable">User</Link></a>
+                                                <a href="#" className="dropdown-item">Employee</a>
+                                            </li>                          
+                                        </ul>                         
+                                    </li>   
+                                    <li> <Link to=""><span className="glyphicon glyphicon-bell" /></Link></li> 
+                                    <li><Link to=""><i class="glyphicon glyphicon-envelope-o"></i></Link></li>            
+                                   
+                                </ul>
+                                <ul className="nav navbar-nav navbar-right col-sm-4">
+                                <li id="account" >
+                                    <Link to="/login" ><span className="glyphicon glyphicon-user" /> Login</Link>
+                                </li>
+                                <li className="dropdown">
+                                    <a id="userAccount" className="dropdown-toggle" data-toggle="dropdown"><Link to=""><span className="glyphicon glyphicon-user" />Account</Link></a>
+                                    <ul className="dropdown-menu" role="menu">
+                                        <a href="#" id="userAccount" href="#" className="dropdown-toggle" data-toggle="dropdown"></a>
+                                        <li>
+                                            <a href="#" className="dropdown-toggle" data-toggle="dropdown">asdasd</a>
+                                            <a href="#" className="dropdown-item" href="#">Log out</a>
+                                        </li>
+                                    </ul>
+                                </li>          
+                                </ul>
+                                <form className="navbar-form navbar-right col-sm-4" action>
+                                <div className="form-group">
+                                    <input type="text" className="form-control" placeholder="Search" name="search" style={{width: '25vh'}} />
+                                </div>      
+                                </form>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+        
+            </div>
+        );
+    }
+}
 export default Header;

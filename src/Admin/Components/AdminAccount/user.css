@@ -1,0 +1,117 @@
+
+.imgLogin{
+  width: 250px;
+  height: 200px;
+  border-radius: 24px;
+}
+.divlogin{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.login {
+  text-align: center;
+  position: relative;
+  width: 280px;
+}
+
+input, .btnbutton {
+  width: 100%;
+  border: 0;
+  border-radius: 20px;
+}
+
+input{
+  border-bottom: 2px solid #444;
+  padding: 12px 40px 12px 20px;
+}
+
+
+input, .btnbutton, .group i, p, a{
+  font-size: 13.3333px;
+  font-weight: 600;
+}
+
+.group{
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.icoin{
+  position: absolute;
+  top: 30px;
+  right: 20px;
+}
+
+.btnbutton {
+  padding: 12px;
+  background-image: linear-gradient(to right, #ff1464, purple);
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.btnbutton, .btnbutton i{
+  color: #ffffff;
+}
+
+.btnbutton i{
+  margin-right: 5px;
+}
+
+p{
+  margin-bottom: 20px;
+}
+
+i.fa.fa-empire, a{
+  color: #ff1464;
+}
+
+i.fa.fa-empire{
+  font-size: 60px;
+  margin-bottom: 20px;
+
+}
+
+h2{
+  margin-bottom: 20px;
+}
+
+input:focus, input:focus::placeholder, input:focus+i{
+  color: #ff1464;
+}
+
+input:focus, .btnbutton:focus{
+  outline: 0;
+}
+
+
+.divlogin:before, .divlogin:after{
+  content: "";
+  position: absolute;
+  height: 300px;
+  width: 500px;
+}
+
+.divlogin:before{
+  background-image: linear-gradient(to right, #6aff14, rgb(150, 131, 150));
+  bottom: 0;
+  left: 0;
+  clip-path: polygon(0 0, 0 100%, 100% 100%);
+}
+
+.divlogin:after{
+  background-image: linear-gradient(to right, #6aff14, #ff1464);
+  top: 0;
+  right: 0;
+  clip-path: polygon(100% 0, 0 0, 100% 100%);
+}
+
+@media (max-width: 767px){
+  body:before, body:after{
+      height: 150px;
+      width: 300px;
+  }
+}

@@ -1,4 +1,11 @@
-
+body {
+    margin:0;
+    padding:0;
+    font-family: Sans-Serif;
+    line-height: 1.5em;
+    overflow: hidden;
+    overflow-y: scroll;
+}
 
 #header {
     background: #ccc;
@@ -39,10 +46,14 @@ main {
 }
             
 #content {
-    margin-left: 230px; 
+    margin-left: 230px; /* Same as 'nav' width */
 }
 
-
+.innertube {
+    margin: 15px; /* Padding for content */
+    height:auto;
+    margin-top: 0;
+}
 
 p {
     color: #555;
@@ -97,4 +108,25 @@ nav ul a {
    }
 .menu{
     height:auto;
+}
+table {
+    /* width: 100%;   */
+    width:1400px;      
+    border-collapse: collapse;
+}
+th, td {
+    padding: 10px;
+   
+    border: 1px solid #dee2e6;
+}
+th {
+    width: auto;
+    height: 40px;
+    text-align: center;
+}
+body {
+    margin:0;}
+
+div {
+    padding:10px
 }
