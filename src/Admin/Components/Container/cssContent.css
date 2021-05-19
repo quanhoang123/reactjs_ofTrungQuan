@@ -7,7 +7,7 @@ body {
     overflow-y: scroll;
 }
 
-#header {
+/* #header {
     background: #ccc;
     height: auto;
 }
@@ -15,7 +15,7 @@ body {
 #header h1 {
     margin: 0;
     padding-top: 15px;
-}
+} */
 
 main {
     padding-bottom: 10010px;

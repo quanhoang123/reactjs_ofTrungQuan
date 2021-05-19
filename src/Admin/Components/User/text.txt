@@ -1,0 +1,200 @@
+import React, { Component } from 'react';
+// import callAPI from "../CallAPI/callApi";
+import axios from 'axios';
+import ReactDOM from "react-dom";
+
+class AllUser extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            users: [],
+            filteredData:[],
+            search:"",
+            id: '',
+            name: "",
+            email:"",
+            user:"",
+            password:"",       
+            phone: "",
+            location:"",     
+            status:false
+        }
+    }
+
+    onChange = (event) => {
+        let key = event.target.name;
+        let value = event.target.value;
+        this.setState({ 
+            [key]: value 
+        }, this.filterArray)
+    }
+    clear = () => {
+        this.setState({ name: "" })
+        this.setState({ email: "" })
+        this.setState({ user: "" })
+        this.setState({ password: "" })
+        this.setState({ phone: "" })
+        this.setState({ location: "" })
+       
+    }
+    
+    postData = (event) => {
+        event.preventDefault();
+        var { name, email,user,password,phone,location} = this.state; 
+        axios({
+            method: 'POST',
+            url: 'http://localhost:8080/api/users',
+            data: {  
+                name:           name,
+                email:          email,
+                user:           user,
+                password:       password,     
+                phone:          phone,
+                location:       location,             
+            }
+        }).then(res => {
+            this.clear();
+            alert("Add user successly")
+            this.getData()
+            window.location.reload()
+        }).catch(err => {
+            alert(err);
+        });
+    }
+    getData = () => {
+        axios({
+            method: 'GET',
+            url: 'http://localhost:8080/api/users',
+            data: null
+        }).then(res => {
+            this.setState({ 
+                users: res.data,
+                filteredData:res.data
+                // id:res.data.length,
+            });       
+            console.log(this.state.users.length);
+        }).catch(err => { });
+    
+    }
+    update = (id) => { 
+        var { name,email, user,password,phone,location} = this.state;
+        axios({
+            method: 'PUT',
+            url: `http://localhost:8080/api/users/${id}`,
+            data: {
+                name:           name,
+                email:          email,
+                user:           user,
+                password:       password,            
+                phone:          phone,
+                location:       location,
+            }
+        }).then(res => {
+            alert("Update user successly !");
+            this.clear()
+            this.getData()
+          
+        }).catch(err => { });
+    }
+    updateData = (id) => {
+        this.clear();      
+        var users = this.state.users;
+        users.filter(user => {
+            if (user.id === id) {
+                this.setState({
+                    id:             user.id,
+                    name:           user.name,
+                    email:          user.email,
+                    user:           user.user,
+                    password:       user.password,        
+                    phone:          user.phone,
+                    location:       user.location,
+                })
+            }
+        })
+    }
+
+    delete = (id) => {
+        axios({
+            method: 'DELETE',
+            url: `http://localhost:8080/api/users/${id}`,
+            data: null
+        }).then(res => {
+            this.getData();
+        }).catch(err => { });
+    }
+
+    componentDidMount() {
+        this.getData();
+    }
+    
+    _handleSearchChange = (e) => {
+    const { value } = e.target;
+    const lowercasedValue = value.toLowerCase();
+
+    this.setState((prevState) => {
+      const filteredData = prevState.filteredData.filter((el) =>
+        el.name.toLowerCase().includes(lowercasedValue)
+      );
+
+      return { filteredData };
+    });
+    if(value===""){
+        window.location.reload();
+    }
+    };
+
+    render() {
+        const { filteredData } = this.state;
+        return (
+            
+            <div>
+            <input onChange={this._handleSearchChange} id="searchUser" placeholder="Search" />
+            <table border="1">
+              <thead>
+                <th>Id</th>
+                <th>Email</th>
+                <th>User Name</th>
+                <th>Phone</th>
+                <th>Locaiton</th>
+                <th>Action</th>
+              </thead>
+              <tbody>
+                {filteredData.map((a) => (
+                  <tr key={a.id}>
+                    <td>{a.id}</td>
+                    <td>{a.name}</td>
+                    <td>{a.email}</td>
+                    <td>{a.phone}</td>
+                    <td>{a.location}</td>
+                    <td>
+                      <ul className="list-inline m-0">
+                        <li className="list-inline-item">
+                          <label className="switch">
+                            <input type="checkbox" />
+                            <span className="slider round"></span>
+                          </label>
+                          {/* <button data-toggle="modal" data-target="#updateUserModal"  onClick={()=>this.updateData(a.id)} className="btn btn-success btn-sm rounded-0" type="button" data-placement="top" title="Edit" ><i className="fa fa-edit" /></button> */}
+                          {/* </li>
+                                                    <li className="list-inline-item"> */}
+                          {/* <button onClick={()=>this.delete(a.id)} className="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete" ><i className="fa fa-trash" /></button> */}
+                        </li>
+                      </ul>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {/* {filteredData.map((el) => (
+              <div key={el.key}>
+                <div>
+                  {el.name} - {el.sale} - {el.description} - {el.price}
+                </div>
+              </div>
+            ))} */}
+          </div>                                     
+        );
+    }
+}
+
+export default AllUser;

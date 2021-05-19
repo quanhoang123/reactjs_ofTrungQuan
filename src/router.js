@@ -4,12 +4,17 @@ import Login from './Admin/Components/AdminAccount/login';
 import Content from './Admin/Components/Container/Content';
 import AllUser from './Admin/Components/User/AllUser';
 import SignUp from './Admin/Components/AdminAccount/signup';
-
+import Comment from './Admin/Components/Notification/Comment';
 const routes = [						
 	{					
 		path : '/',				
 		exact : true,				
-		main : ()=> <Content />				
+		main : ()=> <Login />				
+	},
+	{
+		path:'/content',
+		exact:true,
+		main:()=><Content />
 	},
 	{
 		path : 'allproduct',			
@@ -35,6 +40,11 @@ const routes = [
 		path: 'signup',
 		exact:true,
 		main:()=> <SignUp />
+	},
+	{
+		path: 'comment',
+		exact:true,
+		main:()=> <Comment />
 	}		
 	// {					
 	// 	path : '/product-list',				

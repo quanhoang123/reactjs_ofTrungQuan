@@ -14,7 +14,7 @@ class Login extends Component{
             status:false,
             check:false,
         }
-        this.login=this.login.bind(this);
+        // this.loginAdmin=this.loginAdmin.bind(this);
     }
 
     onChange = (event) => {
@@ -27,7 +27,7 @@ class Login extends Component{
     getData=()=>{
         axios({
             method: "GET",
-            url:'https://data-json-server.herokuapp.com/api/admin',
+            url:'http://localhost:8080/api/admin',
             data: null
         }).then(res => {
             this.setState({ _admin: res.data,
@@ -40,22 +40,30 @@ class Login extends Component{
     componentDidMount(){
         this.getData();
     }
-    login=()=>{
-        var admin=this.state._admin;
+    loginAdmin=()=>{
+        console.log("Cam on ban da dang nhap");
+        var { user,password,check} = this.state;
+        const admin=this.state._admin;
+        // const check=false;
+        
         admin.filter(login=>{
-            if(this.user===login.user && this.password===login.password){
-                alert("Thanh cong");
-                this.check=true;
-                this.props.history('/');
+            if(login.user===user || login.password===password){
+                alert("Login thanh cong");
+                window.location.pathname='/content';
+                localStorage.setItem("Listadmin", JSON.stringify(admin));       
+                check=true;
+                
             }
+            // localStorage.setItem('loggedInUsers', JSON.stringify(admin))
         });
-        if(this.check==false){
-            alert("That Bai");
+        if(check==false){
+            alert("User or password is incorrect");
         }
     }
+    getRandomArbitrary = (min, max) => {
+        return Math.random() * (max - min) + min;
+    };
    
-     
-        // console.log("hihi");
     render(){
         return ( 
             <div className="divlogin">
@@ -63,9 +71,9 @@ class Login extends Component{
                     <img src="https://img.freepik.com/free-vector/coffee-shop-badge-vintage-style_1176-95.jpg?size=626&ext=jpg" className="imgLogin"/>
                     <h2>Login</h2>
                     <from >
-                        <div className="group"><input type="text" placeholder="Username" name="username" onChange={this.onChange}/><i className="fa fa-user icoin" /></div>
-                        <div className="group"><input type="password" placeholder="Password"  name="password" onChange={this.onChange} /><i className="fa fa-lock icoin" /></div>
-                        <button className="btnbutton" type="button" onClick={()=>this.login}> Login</button>
+                        <div className="group"><input type="text" placeholder="Username" required name="username" onChange={this.onChange}/><i className="fa fa-user icoin" /></div>
+                        <div className="group"><input type="password" placeholder="Password" required  name="password" onChange={this.onChange} /><i className="fa fa-lock icoin" /></div>
+                        <button className="btnbutton" type="button" onClick={this.loginAdmin}> Login</button>
                     </from>
                     
                     <p className="fs">Forgot <a href="#">Username</a> / <a href="#">Password</a> ? </p>

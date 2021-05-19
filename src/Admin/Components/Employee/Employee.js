@@ -1,26 +1,25 @@
 import { Component } from 'react';
 import axios from 'axios';
+import "./Employee.css";
 
-
-class AllProduct extends Component {
+class Employee extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            _drinks: [],
-            _searchDrink:[],      
+            _shipper: [],        
             id: '',
-            categories:"",
             name: "", 
-            img: "",
-            description:"",
-            sale:"",     
-            price:"",
-            star:"",
+            avatar:"",
+            amoutOfChuyen: "",
+            bienSoXe:"",
+            phone:"",  
+            salary:"",
+            status:"",
            
         }
         this.previewImage=this.previewImage.bind(this);
         // this.postData=this.postData.bind(this);
-        this.update=this.update.bind(this);
+        // this.update=this.update.bind(this);
     }
 
     onChange = (event) => {
@@ -30,34 +29,33 @@ class AllProduct extends Component {
     }
 
     clear = () => {  
-        this.setState({ categories: "" })
         this.setState({ name: "" })
-        this.setState({ img: "" })
-        this.setState({ description: "" })
-        this.setState({ sale: "" })
-        this.setState({ price: "" })
-        // this.setState({ start: "" })
+        this.setState({ avatar: "" })
+        this.setState({ amoutOfChuyen: "" })
+        this.setState({ bienSoXe: "" })
+        this.setState({ phone: "" })
+        this.setState({ salary: "" })
     }
     
     postDrinks = (event) => {
         console.log("hihihi");
         event.preventDefault();
-        var { categories,name,img, description, sale,price} = this.state;
+        var { name,avatar,amoutOfChuyen, bienSoXe, phone,salary} = this.state;
         axios({
             method: 'POST',
-            url: 'http://localhost:8080/api/products',
+            url: 'http://localhost:8080/api/shiper',
             data: {
-                categories:categories,
-                name: name,
-                detail_image: img,
-                description: description,
-                sale: sale,
-                price:price
+                name:name,
+                avatar: avatar,
+                amoutOfChuyen: amoutOfChuyen,
+                bienSoXe: bienSoXe,
+                phone: phone,
+                salary:salary
             }
         }).then(res => {
             this.clear();     
             this.getData();
-            alert("Add drink successly");
+            alert("Add Empoloyee successly");
             window.location.reload();
         }).catch(err => {
             alert(err);
@@ -67,12 +65,11 @@ class AllProduct extends Component {
     getData = () => {
         axios({
             method: 'GET',
-            url: 'http://localhost:8080/api/products',
+            url: 'http://localhost:8080/api/shiper',
             data: null
         }).then(res => {
             this.setState({ 
-                _drinks: res.data,
-                _searchDrink:res.data,
+                _shipper: res.data,
                 id:res.data.length,
             });
             // console.log(this.state.drinks.length);
@@ -81,8 +78,9 @@ class AllProduct extends Component {
     }
 
     previewImage(){
-        const preview=document.getElementById('imageDrink');     
-        const file=document.getElementById('imageDrinkUpdate').files[0];
+        const preview=document.getElementById('avatarEmp');     
+        const file=document.getElementById('imageEmployeeUpdate').files[0];
+
         let reader = new FileReader();
         reader.addEventListener(
             "load",
@@ -90,10 +88,10 @@ class AllProduct extends Component {
                 preview.src=reader.result;
                 this.setState(
                    {
-                    img:reader.result
+                    avatar:reader.result
                    }
                 )
-                console.log(reader.result); 
+                console.log(reader.result);
             },
             false
         )
@@ -103,19 +101,17 @@ class AllProduct extends Component {
     }
 
     update = (id) => {
-        console.log("hihih");
-        console.log(this.state.id);
-        var { categories,name,img, description, sale,price} = this.state;
+        var { name,avatar,amoutOfChuyen, bienSoXe, phone,salary} = this.state;
         axios({
             method: 'PUT',
-            url: `http://localhost:8080/api/products/${id}`,
+            url: `http://localhost:8080/api/shiper/${id}`,
             data: {
-                categories:categories,
-                name: name,
-                detail_image: img,
-                description: description,
-                sale: sale,
-                price:price    
+                name:name,
+                avatar: avatar,
+                amoutOfChuyen: amoutOfChuyen,
+                bienSoXe: bienSoXe,
+                phone: phone,
+                salary:salary       
             }
         }).then(res => {
             alert("Update drink successly !");
@@ -127,17 +123,16 @@ class AllProduct extends Component {
 
     updateData = (id) => {
         this.clear();
-
-        var drinks = this.state._drinks;
-        drinks.filter(drink => {
-            if (drink.id === id) {
+        var shipper = this.state._shipper;
+        shipper.filter(_shipper => {
+            if (_shipper.id === id) {
                 this.setState({
-                    categories:drink.categories,
-                    name: drink.name,
-                    detail_image: drink.img,
-                    description: drink.description,
-                    sale: drink.sale,
-                    price:drink.price 
+                    name:_shipper.name,
+                    avatar: _shipper.avatar,
+                    amoutOfChuyen: _shipper.amoutOfChuyen,
+                    bienSoXe: _shipper.bienSoXe,
+                    phone: _shipper.phone,
+                    salary:_shipper.salary 
                 })
             }
         })
@@ -147,7 +142,7 @@ class AllProduct extends Component {
         if(window.confirm('Bạn Co Thuc Su Muon Xoa')){
             axios({
                 method: 'DELETE',
-                url: `http://localhost:8080/api/products/${id}`,
+                url: `http://localhost:8080/api/shiper/${id}`,
                 data: null
             }).then(res => {
                 this.getData();
@@ -161,28 +156,10 @@ class AllProduct extends Component {
     componentDidMount() {
         this.getData();
     }
-    _handleSearchChange = (e) => {
-        const { value } = e.target;
-        const lowercasedValue = value.toLowerCase();
-    
-        this.setState((prevState) => {
-          const _searchDrink = prevState._searchDrink.filter((el) =>
-            el.name.toLowerCase().includes(lowercasedValue)
-          );
-    
-          return { _searchDrink };
-        });
-        if(value===""){
-            // this.props.history.push('/allproduct');
-            window.location.reload();
-        }
-    };
-    
     render() {  
-        const {_searchDrink}=this.state;
         return (
             <div >
-                <div className="modal fade" id="addDrinkModal" tabindex="{-1}" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal fade" id="addEmployeeModal" tabindex="{-1}" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">
                         <div className="modal-content"> 
                             <div className="modal-header border-bottom-0">
@@ -192,27 +169,25 @@ class AllProduct extends Component {
                             </div>
                             <div className="modal-body">
                                 <div className="form-title text-center">
-                                    <h4>Add Drinks</h4>
+                                    <h4>Add Employee</h4>
                                 </div>
                                 <div className="d-flex flex-column text-center">
                                     <form onSubmit={this.postDrinks}  encType="multipart/form-data">
                                         <div className="form-group">
-                                            <input type="text" name = "categories" value={this.state.categories} onChange={this.onChange} placeholder="Enter categories of drink" />
+                                            <input type="text" name = "name" value={this.state.name} onChange={this.onChange} placeholder="Enter name of employee" />
                                         </div>
                                         <div className="form-group">
-                                            <input type="text" name = "name" value={this.state.name} onChange={this.onChange} placeholder="Enter name of drinks" />
+                                            <input type="file" name = "avatar"  id="imageEmployeeUpdate"  value={this.state.avatar} onChange={this.previewImage}/>
+                                        </div>
+                                        
+                                        <div className="form-group">
+                                            <input type="text" name = "bienSoXe" value={this.state.bienSoXe} onChange={this.onChange} placeholder="Enter bienSoXe of employee" />
                                         </div>
                                         <div className="form-group">
-                                            <input type="file" name = "detail_image"  id="imageDrinkUpdate"  value={this.state.detail_image} onChange={this.previewImage}/>
+                                            <input type="text" min="0" max="11" name = "phone" value={this.state.phone} onChange={this.onChange} placeholder="Enter phone of employee"/>
                                         </div>
                                         <div className="form-group">
-                                            <input type="text" name = "description" value={this.state.description} onChange={this.onChange} placeholder="Enter description of drinks" />
-                                        </div>
-                                        <div className="form-group">
-                                            <input type="text" name = "price" value={this.state.price} onChange={this.onChange} placeholder="Enter price of drink"/>
-                                        </div>
-                                        <div className="form-group">
-                                            <input type="number" name = "sale" value={this.state.sale} onChange={this.onChange} placeholder="Enter sale of drinks"/>
+                                            <input type="number" name = "salary" value={this.state.salary} onChange={this.onChange} placeholder="Enter salary of employee"/>
                                         </div>                                 
                                         <button type="submit"  className="btn btn-info btn-block btn-round" >Post Drink</button>
                                     </form>
@@ -223,7 +198,7 @@ class AllProduct extends Component {
                         </div>
                     </div>
                 </div>
-                <div className="modal fade" id="updateDrinkModal" tabindex="{-1}" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal fade" id="updateEmployeeModal" tabindex="{-1}" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">
                         <div className="modal-content">
                             <div className="modal-header border-bottom-0">
@@ -234,29 +209,28 @@ class AllProduct extends Component {
                             </div>
                             <div className="modal-body">
                                 <div className="form-title text-center">
-                                    <h4>Update Drink</h4>
+                                    <h4>Update Employee</h4>
                                 </div>  
                                 <div className="d-flex flex-column text-center">
-                                <form  encType="multipart/form-data" >
+                                <form encType="multipart/form-data">
                                         <div className="form-group">
-                                            <input type="text" name = "categories" value={this.state.categories} onChange={this.onChange} placeholder="Enter categories of drink" />
+
+                                            <input type="text" name = "name" value={this.state.name} onChange={this.onChange} placeholder="Enter name of employee" />
                                         </div>
                                         <div className="form-group">
-                                            <input type="text" name = "name" value={this.state.name} onChange={this.onChange} placeholder="Enter name of drinks" />
+                                            <input type="file" name = "avatar"  id="imageEmployeeUpdate"  value={this.state.avatar} onChange={this.previewImage}/>
+                                        </div>
+                                        
+                                        <div className="form-group">
+                                            <input type="text" name = "bienSoXe" value={this.state.bienSoXe} onChange={this.onChange} placeholder="Enter bienSoXe of employee" />
                                         </div>
                                         <div className="form-group">
-                                            <input type="file" name = "detail_image" id="imageDrinkUpdate" value={this.state.detail_image} onChange={this.previewImage}/>
+                                            <input type="text" min="0" max="11" name = "phone" value={this.state.phone} onChange={this.onChange} placeholder="Enter phone of employee"/>
                                         </div>
                                         <div className="form-group">
-                                            <input type="text" name = "description" value={this.state.description} onChange={this.onChange} placeholder="Enter description of drinks" />
-                                        </div>
-                                        <div className="form-group">
-                                            <input type="number" name = "price" value={this.state.price} onChange={this.onChange} placeholder="Enter price of drink"/>
-                                        </div>
-                                        <div className="form-group">
-                                            <input type="number" name = "sale" value={this.state.sale} onChange={this.onChange} placeholder="Enter sale of drinks"/>
-                                        </div>     
-                                        <button type="button" className="btn btn-info btn-block btn-round" onClick={()=>this.update(this.state.id) }>Update</button>
+                                            <input type="number" name = "salary" value={this.state.salary} onChange={this.onChange} placeholder="Enter salary of employee"/>
+                                        </div>   
+                                        <button type="button" className="btn btn-info btn-block btn-round" onClick={() => this.update(this.state.id)}>Update</button>
                                     </form>                                                                  
                                 </div>
                             </div>
@@ -264,48 +238,48 @@ class AllProduct extends Component {
                     </div>
                 </div>
                 {/* Search               */}
-
-
+                           
                     <form className="navbar-form" action>
-                    <button  className="btn btn-primary btn-sm rounded-0" type="button" data-toggle="modal" data-target="#addDrinkModal" data-placement="top" title="Add Drink"><i className="fa fa-plus-circle" /></button> 
+                    <button  className="btn btn-primary btn-sm rounded-0" type="button" data-toggle="modal" data-target="#addEmployeeModal" data-placement="top" title="Add Employee"><i className="fa fa-plus-circle" /></button> 
                         <div className="form-group">
-                            <input type="text" className="form-control" placeholder="Search"  onChange={this._handleSearchChange}  style={{width: '25vh'}} />
+                            <input type="text" className="form-control" placeholder="Search" name="searchEmployee" id="search" style={{width: '25vh'}} />
                         </div>      
                     </form>          
                 <div className="tab">
                     <table>
                         <thead>
                             <th>Id</th>
-                            <th>Id Categories</th>
-                            <th>Name</th>
-                            <th>Image</th>
-                            <th>Description</th>
-                            <th>Price</th>
-                            <th>Sale</th>
-                            <th>Star</th>
+                            <th>Name Employee</th>
+                            <th>Avatar</th>
+                            <th>Amount of trips</th>
+                            <th>License Plates</th>
+                            <th>Phone</th>
+                            <th>Salary</th>                          
                             <th>Action</th>
                         </thead>
                         <tbody>
                             {
-                                _searchDrink.map(a => (
-                                    <tr>                                       
+                                this.state._shipper.map(a => (
+                                    <tr key={a.id}>
+                                        
                                         <td>{a.id}</td>
-                                        <td>{a.categories}</td>
                                         <td>{a.name}</td>
-                                        <td><img src={a.detail_image} width="200px" height="100px" id="imageDrink"/></td>
-                                        <td>{a.description}</td>
-                                        <td>{a.price}</td>
-                                        <td>{a.sale}</td>
-                                        <td>{a.star}</td>                                            
+                                        <td><img src={a.avatar} width="200px" height="200px" id="avatarEmp" className="text-center"/></td>
+                                        <td>{a.amoutOfChuyen}</td>
+                                        <td>{a.bienSoXe}</td>
+                                        <td>{a.phone}</td>
+                                        <td>{a.salary}</td>
+                                                                             
                                         <td>
                                             <ul className="list-inline m-0">
                                                 <li className="list-inline-item">                                              
-                                                    <button className="btn btn-success btn-sm rounded-0" type="button" data-toggle="modal" data-target="#updateDrinkModal" data-placement="top" title="Edit" onClick={()=>this.updateData(a.id)}><i className="fa fa-edit" /></button>
+                                                    <button className="btn btn-success btn-sm rounded-0" type="button" data-toggle="modal" data-target="#updateEmployeeModal" data-placement="top" title="Edit" onClick={()=>this.updateData(a.id)}><i className="fa fa-edit" /></button>
                                                 </li>
                                                 <li className="list-inline-item">
                                                    <button className="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete" onClick={()=>this.delete(a.id)}><i className="fa fa-trash" /></button>
                                                 </li>
-                                            </ul>                                           
+                                            </ul>
+                                            
                                         </td>
                                     </tr>
                                 ))
@@ -318,4 +292,5 @@ class AllProduct extends Component {
     }
 }
 
-export default AllProduct;
+export default Employee;
+

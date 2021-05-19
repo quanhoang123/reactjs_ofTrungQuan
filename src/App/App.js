@@ -6,7 +6,7 @@ import AllProduct from '../Admin/Components/Product/AllProduct';
 import Login from '../Admin/Components/AdminAccount/login';
 import Content from "../Admin/Components/Container/Content";
 import SignUp from "../Admin/Components/AdminAccount/signup";
-
+import Comment from "../Admin/Components/Notification/Comment";
 
 class App extends Component {
   render() {
@@ -14,8 +14,8 @@ class App extends Component {
       <Router>
         <div>
           <Switch>
-                <Route exact path="/">
                 {this.showContentMenu(routes)} 
+                <Route exact path="/">        
                 </Route>  
 
                 <Route path="/allproduct">
@@ -35,8 +35,11 @@ class App extends Component {
                 <SignUp />          
                 </Route>
 
-                <Route path="/usertable"> 
+                <Route path="/content"> 
                    <Content />       
+                </Route>
+                <Route path="/commnet"> 
+                   <Comment />       
                 </Route>
           </Switch>
         </div>

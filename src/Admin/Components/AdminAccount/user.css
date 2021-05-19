@@ -50,7 +50,7 @@ input, .btnbutton, .group i, p, a{
   padding: 12px;
   background-image: linear-gradient(to right, #ff1464, purple);
   margin-bottom: 20px;
-  cursor: pointer;
+  /* cursor: pointer; */
 }
 
 .btnbutton, .btnbutton i{
