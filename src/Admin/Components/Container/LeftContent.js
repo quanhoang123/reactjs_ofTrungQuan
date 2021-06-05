@@ -2,42 +2,41 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 
 class LeftContent extends Component {
-    _admin=[];
-    _avatar=[];
-   
-    getUser=()=>{      
-        this._admin=JSON.parse(localStorage.getItem("Listadmin"));
-        console.log(this._admin)
-        return this._admin[2].username;
-    }
-    getAvatar=()=>{     
-        this._avatar=JSON.parse(localStorage.getItem("Listadmin"));
-        return this._avatar[2].avatar.toString();
-    }
-    componentDidMount(){
-        this.getUser(); 
-        this.getAvatar();
-    }
+
     render() {
         return (
-            <div className="innertube">
-                <h3 className="">ADMIN</h3>
-                <div>
-                    <ul>
-                        <li className="dropdown">
-                            <a  className="dropdown-toggle" data-toggle="dropdown" ><span className="glyphicon glyphicon-user" />Account</a>
-                            <ul className="dropdown-menu" role="menu">          
-                                <li id="account">
-                                    <a href="#" id="userAccount" href="#" className="dropdown-toggle" data-toggle="dropdown"></a>
-                                    {/* <Link to="/login" ><span className="glyphicon glyphicon-user" /> Login</Link> */}
-                                    <img src={this.getAvatar()}  width="400px" className="col-sm-12 text-center"/>
-                                    <a id="account" className="dropdown-toggle" data-toggle="dropdown" ><span className="glyphicon glyphicon-user"/> {this.getUser()}</a>
-                                    <a href="#" className="dropdown-item" ><span className="glyphicon glyphicon-off" /> Log out</a>
-                                </li>
-                            </ul>
-                        </li>                        
+            <div>
+                <div className="logo"><a className="simple-text logo-normal">
+                    ADMIN COFFE SHOP
+                            </a></div>
+                <div className="sidebar-wrapper">
+                    <ul className="nav">
+                        <li className="nav-item  ">
+                            <a className="nav-link" >
+                                <i className="material-icons">dashboard</i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                        <li className="nav-item ">
+                            {/* <Link to="adminProfile"> */}
+                                <a className="nav-link" href='adminProfile' >
+                                    <i className="material-icons">person</i>
+                                    <p>Admin Profile</p>
+                                </a>
+                            {/* </Link> */}
+                        </li>
+                        <li className="nav-item active ">
+                            {/* <Link to="content"> */}
+                                <a className="nav-link" href='content'>
+                                    <i className="material-icons">content_paste</i>
+                                    <p>Table List</p>
+                                </a>
+                            {/* </Link> */}
+
+                        </li>
+
                     </ul>
-                </div>                          
+                </div>
             </div>
         );
     }

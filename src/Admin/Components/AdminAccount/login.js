@@ -8,15 +8,14 @@ class Login extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            _admin: [],      
+            _admin: [],   
+            _checkAmin:[],
             user:"",
             password:"",
             status:false,
             check:false,
         }
-        // this.loginAdmin=this.loginAdmin.bind(this);
     }
-
     onChange = (event) => {
         let key = event.target.name;
         let value = event.target.value;
@@ -27,37 +26,56 @@ class Login extends Component{
     getData=()=>{
         axios({
             method: "GET",
-            url:'http://localhost:8080/api/admin',
+            url:'https://data-json-server.herokuapp.com/api/admin',
             data: null
         }).then(res => {
-            this.setState({ _admin: res.data,
-                // id:res.data.length,
+            this.setState({ 
+                _admin: res.data,
+                id:res.data.length,
             });       
-            console.log(this.state._admin.length);
+            console.log(this.state._admin);
         }).catch(err => { });
        
     }
-    componentDidMount(){
-        this.getData();
+    componentDidMount(){       
+        axios({
+            method: "GET",
+            url:'https://data-json-server.herokuapp.com/api/admin',
+            data: null
+        }).then(res => {
+            this.setState({ 
+                _admin: res.data,
+                id:res.data.length,
+            });       
+            console.log(this.state._admin);
+        }).catch(err => { });
     }
     loginAdmin=()=>{
         console.log("Cam on ban da dang nhap");
+        const a=document.getElementById('username').value;
         var { user,password,check} = this.state;
         const admin=this.state._admin;
-        // const check=false;
-        
+ 
         admin.filter(login=>{
-            if(login.user===user || login.password===password){
-                alert("Login thanh cong");
-                window.location.pathname='/content';
-                localStorage.setItem("Listadmin", JSON.stringify(admin));       
-                check=true;
-                
-            }
-            // localStorage.setItem('loggedInUsers', JSON.stringify(admin))
+            if(login.username===user || login.password===password){                        
+                localStorage.setItem("Listadmin", JSON.stringify(admin));                          
+                check=true;              
+            }                     
         });
-        if(check==false){
-            alert("User or password is incorrect");
+ 
+        if(check===true){
+            for(let i in admin){
+                if(admin[i].username===a){
+                    this.state._checkAmin.push(admin[i].username);
+                }
+            }
+            localStorage.setItem('AdminActive',JSON.stringify(this.state._checkAmin));
+            window.location.pathname='/content';
+            alert("Login thanh cong");
+
+        }
+        if(check===false){
+            alert("Tài khoản hoặc mật khẩu không đúng");
         }
     }
     getRandomArbitrary = (min, max) => {
@@ -71,12 +89,11 @@ class Login extends Component{
                     <img src="https://img.freepik.com/free-vector/coffee-shop-badge-vintage-style_1176-95.jpg?size=626&ext=jpg" className="imgLogin"/>
                     <h2>Login</h2>
                     <from >
-                        <div className="group"><input type="text" placeholder="Username" required name="username" onChange={this.onChange}/><i className="fa fa-user icoin" /></div>
-                        <div className="group"><input type="password" placeholder="Password" required  name="password" onChange={this.onChange} /><i className="fa fa-lock icoin" /></div>
+                        <div className="group"><input type="text" placeholder="Username" required id= "username" name="username" onChange={this.onChange}/><i className="fa fa-user icoin" /></div>
+                        <div className="group"><input type="password" placeholder="Password" required id="password"  name="password" onChange={this.onChange} /><i className="fa fa-lock icoin" /></div>
                         <button className="btnbutton" type="button" onClick={this.loginAdmin}> Login</button>
-                    </from>
-                    
-                    <p className="fs">Forgot <a href="#">Username</a> / <a href="#">Password</a> ? </p>
+                    </from>                  
+                    <p className="fs">Forgot <a >Username</a> / <a >Password</a> ? </p>
                     <p className="ss">Don't have an account? <Link to="signup">Sign Up</Link></p>
                 </div>
             </div>      

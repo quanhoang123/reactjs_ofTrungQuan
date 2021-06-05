@@ -45,7 +45,7 @@ class AllUser extends Component {
         var { name, email,user,password,phone,location} = this.state; 
         axios({
             method: 'POST',
-            url: 'http://localhost:8080/api/users',
+            url: 'https://data-json-server.herokuapp.com/api/users',
             data: {  
                 name:           name,
                 email:          email,
@@ -66,7 +66,7 @@ class AllUser extends Component {
     getData = () => {
         axios({
             method: 'GET',
-            url: 'http://localhost:8080/api/users',
+            url: 'https://data-json-server.herokuapp.com/api/users',
             data: null
         }).then(res => {
             this.setState({ 
@@ -79,24 +79,29 @@ class AllUser extends Component {
     
     }
     update = (id) => { 
-        var { name,email, user,password,phone,location} = this.state;
-        axios({
-            method: 'PUT',
-            url: `http://localhost:8080/api/users/${id}`,
-            data: {
-                name:           name,
-                email:          email,
-                user:           user,
-                password:       password,            
-                phone:          phone,
-                location:       location,
-            }
-        }).then(res => {
-            alert("Update user successly !");
-            this.clear()
-            this.getData()
-          
-        }).catch(err => { });
+        var { name,email, user,password,phone,location, checkStatus} = this.state;
+        console.log(checkStatus);
+        if(checkStatus===false){
+            alert("Can't update user" );
+        }else{
+            axios({
+                method: 'PUT',
+                url: `https://data-json-server.herokuapp.com/api/users/${id}`,
+                data: {
+                    name:           name,
+                    email:          email,
+                    user:           user,
+                    password:       password,            
+                    phone:          phone,
+                    location:       location,
+                }
+            }).then(res => {
+                alert("Update user successly !");
+                this.clear()
+                this.getData()            
+            }).catch(err => { });
+        }
+        
     }
     updateData = (id) => {
         this.clear();      
@@ -117,13 +122,17 @@ class AllUser extends Component {
     }
 
     delete = (id) => {
+        if(window.confirm('Bạn Co Thuc Su Muon Xoa')){
         axios({
             method: 'DELETE',
-            url: `http://localhost:8080/api/users/${id}`,
+            url: `https://data-json-server.herokuapp.com/api/users/${id}`,
             data: null
         }).then(res => {
             this.getData();
         }).catch(err => { });
+    }else{
+        return;
+    }
     }
 
     componentDidMount() {
@@ -146,11 +155,6 @@ class AllUser extends Component {
         }
     };
     
-    // buttonOnclick = () => {
-    //     this.setState((prev) => ({
-    //       check: !prev.check
-    //     }));
-    //   };
     render() {
         // console.log(this.state.check);
         const { searchString } = this.state;
@@ -171,24 +175,41 @@ class AllUser extends Component {
                                     <h4>Update User</h4>
                                 </div>  
                                 <div className="d-flex flex-column text-center">
-                                    <form>
-                                        <div className="form-group">Your Name
-                                            <input type="text" name = "name" value={this.state.name} onChange={this.onChange} />
+                                    <form >
+                                        <div className="row">                                           
+                                            <div className="col-md-12">
+                                                <div className="form-group">
+                                                    <input type="text"  className="form-control" name = "name" value={this.state.name} onChange={this.onChange} />
+                                                </div>
+                                            </div>              
                                         </div>
-                                        <div className="form-group">Email
-                                            <input type="email"  name = "email" value={this.state.email} onChange={this.onChange} placeholder="Enter your" />
+                                        <div className="row">                                           
+                                            <div className="col-md-12">
+                                                <div className="form-group">
+                                                    <input  className="form-control" type="email"  name = "email" value={this.state.email} onChange={this.onChange} placeholder="Enter your" />
+                                                </div>
+                                            </div>            
                                         </div>
-                                        <div className="form-group">User Name
-                                            <input type="text" name="user" value={this.state.user} onChange={this.onChange} />
+                                        
+                                        <div className="row">
+                                            <div className="col-md-12">
+                                                <div className="form-group">                                         
+                                                    <input type="text" name="user" className="form-control" value={this.state.user} onChange={this.onChange}/>
+                                                </div>
+                                            </div>             
                                         </div>
-                                        <div className="form-group">You Phone
-                                            <input type="phone" min='0' max='10' name="phone" value={this.state.phone} onChange={this.onChange} />
+                                        <div className="row">
+                                            <div className="col-md-12">
+                                                <div className="form-group">                                         
+                                                <input type="text" name="locaiton" className="form-control" value={this.state.location} onChange={this.onChange} placeholder="Enter address of user" />
+                                                </div>
+                                            </div>                                    
                                         </div>
-                                        <div className="form-group">Your Address Home
-                                            <input type="text" name="locaiton" min="0" max="11" value={this.state.location} onChange={this.onChange} />
-                                        </div>
-                                        <button type="button" className="btn btn-info btn-block btn-round" onClick={() => this.update(this.state.id)}>Update</button>
-                                    </form>                                                                  
+                                                                           
+                                        <button type="submit" className="btn btn-primary pull-right"onClick={()=>this.update(this.state.id) }>Update</button>
+                                        <div className="clearfix" />
+                                    </form>
+                                                                                                     
                                 </div>
                             </div>
                         </div>
@@ -208,24 +229,45 @@ class AllUser extends Component {
                                     <h4>Add User</h4>
                                 </div>  
                                 <div className="d-flex flex-column text-center">
-                                    <form>
-                                        <div className="form-group">Your Name
-                                            <input type="text" name = "name" value={this.state.name} onChange={this.onChange} />
+                                    <form >
+                                        <div className="row">                                           
+                                            <div className="col-md-6">
+                                                <div className="form-group">
+                                                    <input type="text"  className="form-control" name = "name" value={this.state.name} onChange={this.onChange}  placeholder="Enter name customer"/>
+                                                </div>
+                                            </div>    
+                                            <div className="col-md-6">
+                                                <div className="form-group">
+                                                    <input type="number" min="1" max="11"  className="form-control" name = "phone" value={this.state.phone} onChange={this.onChange}  placeholder="Enter name phone"/>
+                                                </div>
+                                            </div>           
                                         </div>
-                                        <div className="form-group">Email
-                                            <input type="email"  name = "email" value={this.state.email} onChange={this.onChange} placeholder="Enter your" />
+                                        <div className="row">                                           
+                                            <div className="col-md-12">
+                                                <div className="form-group">
+                                                    <input  className="form-control" type="email"  name = "email" value={this.state.email} onChange={this.onChange} placeholder="Enter email customer" />
+                                                </div>
+                                            </div>            
                                         </div>
-                                        <div className="form-group">User Name
-                                            <input type="text" name="user" value={this.state.user} onChange={this.onChange} />
+                                        
+                                        <div className="row">
+                                            <div className="col-md-12">
+                                                <div className="form-group">                                         
+                                                    <input type="text" name="user" className="form-control" value={this.state.user} onChange={this.onChange} placeholder="Enter username customer "/>
+                                                </div>
+                                            </div>             
                                         </div>
-                                        <div className="form-group">You Phone
-                                            <input type="phone" min='0' max='10' name="phone" value={this.state.phone} onChange={this.onChange} />
+                                        <div className="row">
+                                            <div className="col-md-12">
+                                                <div className="form-group">                                         
+                                                <input type="text" name="locaiton" name="location" className="form-control" value={this.state.location} onChange={this.onChange} placeholder="Enter location of user" />
+                                                </div>
+                                            </div>                                    
                                         </div>
-                                        <div className="form-group">Your Address Home
-                                            <input type="text" name="locaiton" min="0" max="11" value={this.state.location} onChange={this.onChange} />
-                                        </div>
+                                                                           
                                         <button type="button" className="btn btn-info btn-block btn-round" onClick={this.postData}>Add User</button>
-                                    </form>                                                                  
+                                        <div className="clearfix" />
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -239,7 +281,106 @@ class AllUser extends Component {
                             <input type="text" className="form-control" placeholder="Search"  onChange={this._handleSearchChange} style={{width: '25vh'}} />                          
                         </div>                        
                 </form>
-                <div className="tab" style={{ width: '400px' }}>
+                <div className="card-body">
+                    <div className="table-responsive">
+                        <table className="table">
+                            <thead className=" text-primary">
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Email</th>
+                                    <th>User Name</th>
+                                    <th>Phone</th>
+                                    <th>Locaiton</th>                
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                            {
+                                searchString.map(a => (
+                                    <tr key={a.id}>                                    
+                                        <td>{a.id}</td>
+                                        <td>{a.name}</td>
+                                        <td>{a.email}</td>
+                                        <td>{a.phone}</td>
+                                        <td>{a.location}</td>                                  
+                                        <td>
+                                            <ul className="list-inline m-0">
+                                                <li className="list-inline-item">                                              
+                                                    <span className="btn btn-success btn-sm rounded-0">{a.status}</span>
+                                                </li> 
+                                                <li className="list-inline-item">                                              
+                                                    <BootstrapSwitchButton checked={a.checkStatus} onstyle="light" offstyle="dark" width={100}  style={{backgroundColor: 'blue'}} onChange={
+                                                        ()=>{
+                                                                if(a.checkStatus===true){
+                                                                        // alert("true")
+                                                                    let check1=false;
+                                                                    let check2='lock';                                                            
+                                                                        axios({
+                                                                            method: 'PUT',
+                                                                            url: `https://data-json-server.herokuapp.com/api/users/${a.id}`,
+                                                                            data: {
+                                                                                name:           a.name,
+                                                                                email:          a.email,
+                                                                                user:           a.user,
+                                                                                password:       a.password,            
+                                                                                phone:          a.phone,
+                                                                                location:       a.location,
+                                                                                checkStatus:    check1,
+                                                                                status:         check2
+                                                                            }
+                                                                        }).then(res => {
+                                                                            alert("Update status user off !");                                                        
+                                                                            this.getData()                                                                
+                                                                        }).catch(err => { });
+                                                                
+                                                                    }else{
+                                                                        let check1=true;
+                                                                        let check2='unlock';                                                              
+                                                                        axios({
+                                                                            method: 'PUT',
+                                                                            url: `https://data-json-server.herokuapp.com/api/users/${a.id}`,
+                                                                            data: {
+                                                                                name:           a.name,
+                                                                                email:          a.email,
+                                                                                user:           a.user,
+                                                                                password:       a.password,            
+                                                                                phone:          a.phone,
+                                                                                location:       a.location,
+                                                                                checkStatus:    check1,
+                                                                                status:         check2
+                                                                            }
+                                                                        }).then(res => {
+                                                                            alert("Update status user true !");                                                        
+                                                                            this.getData()                                                                
+                                                                        }).catch(err => { });
+                                                                    }                                                        
+                                                                }
+                                                    }/> 
+                                                </li>
+                                                                                       
+                                            </ul>                    
+                                                
+                                        </td>
+                                        <td>
+                                            <ul className="list-inline m-0">
+                                                <li className="list-inline-item"> 
+                                                                                             
+                                                    <button className="btn btn-success btn-sm rounded-0" type="button" data-toggle="modal" data-target="#updateUserModal" data-placement="top" title="Edit" onClick={()=>this.updateData(a.id)}><i className="fa fa-edit" /></button>
+                                                </li>
+                                                <li className="list-inline-item">
+                                                   <button className="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete" onClick={()=>this.delete(a.id)}><i className="fa fa-trash" /></button>
+                                                </li>
+                                            </ul>      
+                                        </td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                                </table>
+                            </div>
+                        </div>
+                {/* <div className="tab" style={{ width: '400px' }}>
                     <table>
                         <thead>
                             <th>Id</th>
@@ -247,6 +388,7 @@ class AllUser extends Component {
                             <th>User Name</th>
                             <th>Phone</th>
                             <th>Locaiton</th>                
+                            <th>Status</th>
                             <th>Action</th>
                         </thead>
                         <tbody>
@@ -259,61 +401,79 @@ class AllUser extends Component {
                                         <td>{a.phone}</td>
                                         <td>{a.location}</td>                                  
                                         <td>
-                                            <BootstrapSwitchButton checked={a.checkStatus} onstyle="light" offstyle="dark" width={100}  style={{backgroundColor: 'blue'}} onChange={
-                                                ()=>{
-                                                        if(a.checkStatus===true){
-                                                                // alert("true")
-                                                            let check1=false;
-                                                            let check2='lock';                                                            
-                                                                axios({
-                                                                    method: 'PUT',
-                                                                    url: `http://localhost:8080/api/users/${a.id}`,
-                                                                    data: {
-                                                                        name:           a.name,
-                                                                        email:          a.email,
-                                                                        user:           a.user,
-                                                                        password:       a.password,            
-                                                                        phone:          a.phone,
-                                                                        location:       a.location,
-                                                                        checkStatus:    check1,
-                                                                        status:         check2
-                                                                    }
-                                                                }).then(res => {
-                                                                    alert("Update status user off !");                                                        
-                                                                    this.getData()                                                                
-                                                                }).catch(err => { });
-                                                         
-                                                            }else{
-                                                                let check1=true;
-                                                                let check2='unlock';                                                              
-                                                                axios({
-                                                                    method: 'PUT',
-                                                                    url: `http://localhost:8080/api/users/${a.id}`,
-                                                                    data: {
-                                                                        name:           a.name,
-                                                                        email:          a.email,
-                                                                        user:           a.user,
-                                                                        password:       a.password,            
-                                                                        phone:          a.phone,
-                                                                        location:       a.location,
-                                                                        checkStatus:    check1,
-                                                                        status:         check2
-                                                                    }
-                                                                }).then(res => {
-                                                                    alert("Update status user true !");                                                        
-                                                                    this.getData()                                                                
-                                                                }).catch(err => { });
-                                                            }                                                        
-                                                        }
-                                                   }/>               
+                                            <ul className="list-inline m-0">
+                                                <li className="list-inline-item">                                              
+                                                    <span className="btn btn-success btn-sm rounded-0">{a.status}</span>
+                                                </li> 
+                                                <li className="list-inline-item">                                              
+                                                    <BootstrapSwitchButton checked={a.checkStatus} onstyle="light" offstyle="dark" width={100}  style={{backgroundColor: 'blue'}} onChange={
+                                                        ()=>{
+                                                                if(a.checkStatus===true){
+                                                                        // alert("true")
+                                                                    let check1=false;
+                                                                    let check2='lock';                                                            
+                                                                        axios({
+                                                                            method: 'PUT',
+                                                                            url: `https://data-json-server.herokuapp.com/api/users/${a.id}`,
+                                                                            data: {
+                                                                                name:           a.name,
+                                                                                email:          a.email,
+                                                                                user:           a.user,
+                                                                                password:       a.password,            
+                                                                                phone:          a.phone,
+                                                                                location:       a.location,
+                                                                                checkStatus:    check1,
+                                                                                status:         check2
+                                                                            }
+                                                                        }).then(res => {
+                                                                            alert("Update status user off !");                                                        
+                                                                            this.getData()                                                                
+                                                                        }).catch(err => { });
+                                                                
+                                                                    }else{
+                                                                        let check1=true;
+                                                                        let check2='unlock';                                                              
+                                                                        axios({
+                                                                            method: 'PUT',
+                                                                            url: `https://data-json-server.herokuapp.com/api/users/${a.id}`,
+                                                                            data: {
+                                                                                name:           a.name,
+                                                                                email:          a.email,
+                                                                                user:           a.user,
+                                                                                password:       a.password,            
+                                                                                phone:          a.phone,
+                                                                                location:       a.location,
+                                                                                checkStatus:    check1,
+                                                                                status:         check2
+                                                                            }
+                                                                        }).then(res => {
+                                                                            alert("Update status user true !");                                                        
+                                                                            this.getData()                                                                
+                                                                        }).catch(err => { });
+                                                                    }                                                        
+                                                                }
+                                                    }/> 
+                                                </li>
+                                                                                       
+                                            </ul>                    
                                                 
+                                        </td>
+                                        <td>
+                                            <ul className="list-inline m-0">
+                                                <li className="list-inline-item">                                              
+                                                    <button className="btn btn-success btn-sm rounded-0" type="button" data-toggle="modal" data-target="#updateUserModal" data-placement="top" title="Edit" onClick={()=>this.updateData(a.id)}><i className="fa fa-edit" /></button>
+                                                </li>
+                                                <li className="list-inline-item">
+                                                   <button className="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete" onClick={()=>this.delete(a.id)}><i className="fa fa-trash" /></button>
+                                                </li>
+                                            </ul>      
                                         </td>
                                     </tr>
                                 ))
                             }
                         </tbody>
                     </table>
-                </div>
+                </div> */}
             </div>
         );
     }

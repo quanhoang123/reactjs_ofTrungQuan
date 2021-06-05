@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import axios from 'axios';
+import emailjs from 'emailjs-com';
+
+import callAPI from '../CallAPI/callApi';
+// npm i emailjs-com --save
 class SignUp extends Component {
     constructor(props){
         super(props);
         this.state={
             _admin:[],
+           checkmail:false,
             username:"",
             password:"",
             confirmpassword:"",
@@ -13,6 +18,8 @@ class SignUp extends Component {
             check:true
         }
         this.previewImage=this.previewImage.bind(this);
+        this.sendEmail=this.sendEmail.bind(this);
+        this.onImageChange = this.onImageChange.bind(this);
     }
     onChange=(event)=>{
         let key = event.target.name;
@@ -28,7 +35,7 @@ class SignUp extends Component {
     getData = () => {
         axios({
             method: 'GET',
-            url: 'http://localhost:8080/api/admin',
+            url: 'https://data-json-server.herokuapp.com/api/admin',
             data: null
         }).then(res => {
             this.setState({ 
@@ -39,76 +46,72 @@ class SignUp extends Component {
         }).catch(err => { });
           
     }
-    postAccount = (event) => {
-        
-        console.log("hihihi");
-        event.preventDefault();
-        var { username,password,confirmpassword,img} = this.state;
-        // var exist = this._admin.find(u => u.username === user)
-        // if (exist) {
-        //     alert('Tên tài khoản đã tồn tại!');
-        //     return;
-        // }
-        var checkPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,10}$/;
-        const checkCharacter = /^[a-z]/;
-        // var exist = this.state._admin.find(u => u.username === username)
+    sendEmail(e) {
+        e.preventDefault();   
+        emailjs.sendForm('service_bi9bt5f', 'template_kohh149', e.target, 'user_7l56tBxkScGrQk6pbBiXH')
+          .then((result) => {
+              console.log(result.text);
+          }, (error) => {
+              console.log(error.text);
+          });
+      }
+   
+    
+
+    postAccount = (e) => {      
+        e.preventDefault();
+        var { username,password,confirmpassword,img,checkmail} = this.state;
+        var check=this.state._admin.find(
+            (row)=>{row.username===username}
+        ); 
         if (username & password & confirmpassword & img) {
-            alert("Vui long nhap du thong tin")
-            
+            alert("Vui long nhap du thong tin")           
             return;
-
-        } else {
-
-            if (!(checkCharacter.test(username))) {
-                alert("Tên đăng nhập không hợp lệ.")
-                console.log(username + username + password);
-                return false;
-
-            }
-            if (!checkPass.test(password)) {
-                alert('Vui lòng nhập mật khẩu từ 6-10 kí tự và có ít 1 nhất số, chữ thường và chữ hoa.')
-                return false;
-                //console.log(email + username + password + cpassword);
-            }
-            var checkEmail = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-            if (!checkEmail.test(username)) {
-                alert('Hay nhap dia chi email hop le.\nExample@gmail.com');
-                // email.focus;
-                return false;
-
-            }
-            if (confirmpassword !== password) {
-                alert("mat khau xac nhan chua dung");
-                return;
-            }
-            // if (exist) {
-            //     alert('Tên tài khoản đã tồn tại!');
-            //     return;
-            // }
-           
+        } 
+        if(check){
+            alert('Tên tài khoản đã tồn tại!');
+            return;
         }
-        
-        axios({
-            method: 'POST',
-            url: 'http://localhost:8080/api/admin',
-            data: {
+        // var x = parseInt(this.getRandomArbitrary(100000, 999999));
+        // var num = prompt("Mã xác nhận đăng ký của bạn đã được gửi qua email. Vui lòng nhập mã xác nhận: ", "******");
+       else
+        {
+            var data1={
                 username:username,
                 password: password,
                 confirmpassword:confirmpassword,
-                avatar: img,              
+                avatar: img, 
             }
-        }).then(res => {
-            
-            this.getData();
-            alert("Add account successly");
-            window.location.pathname='/login';
-            alert('Mời bạn đăng nhập vào');
-        }).catch(err => {
-            alert(err);
-        });
+            callAPI('admin', 'POST', data1).then(response => {
+                this.getData();
+                alert("Add account successly");
+                window.location.pathname='/login';           
+                alert('Mời bạn đăng nhập vào');
+                checkmail=true;
+            }).catch(err => {
+                alert(err);
+            });       
+        }
+        if(this.state.checkmail=true){
+            this.sendEmail();
+        }
     }
+   
+    getRandomArbitrary = (min, max) => {
+        return Math.random() * (max - min) + min;
+    };
+    onImageChange = event => {
+        if (event.target.files && event.target.files[0]) {
+            let imga = event.target.files[0];
+            this.setState({
+                img: URL.createObjectURL(imga)
+            });
+        } else {
+            alert("Không được")
+        }
+    };
     previewImage(){
-        // const preview=document.getElementById('imageDrink');     
+         
         const file=document.getElementById('avatarAdmin').files[0];
         let reader = new FileReader();
         reader.addEventListener(
@@ -126,7 +129,9 @@ class SignUp extends Component {
             reader.readAsDataURL(file);
         }
     }
+    
     render() {
+ 
         return (
             <div className="divlogin">
                 <div className="login">
@@ -135,12 +140,12 @@ class SignUp extends Component {
                     <form onSubmit={this.postAccount}>
                         <div className="group"><input type="text" placeholder="Username" required name="username" value={this.state.username} onChange={this.onChange} /><i className="fa fa-user icoin" /></div>
                         <div className="group"><input type="password" placeholder="Password" required  name="password" value={this.state.password} onChange={this.onChange} /><i className="fa fa-lock icoin" /></div>
-                        <div className="group"><input type="password" placeholder="Confirmpassword" required  name="confirmpassword" value={this.state.confirmpassword} onChange={this.onChange} /><i className="fa fa-lock icoin" /></div>
-                        <div className="group"> <input type="file" name="avatar" id="avatarAdmin" value={this.state.avatar} onChange={this.previewImage}/> </div>
+                        <div className="group"><input type="password" placeholder="Confirmpassword"   name="confirmpassword" value={this.state.confirmpassword} onChange={this.onChange} /><i className="fa fa-lock icoin" /></div>
+                        <div className="group"> <input type="file" name="avatar" value={this.state.avatar} onChange={this.onImageChange}/> </div>
                         <button className="btnbutton"> Sign Up</button>
                     </form>
            
-                    <p className="fs">Forgot <a href="#">Username</a> / <a href="#">Password</a> ? </p>
+                    <p className="fs">Forgot <a >Username</a> / <a >Password</a> ? </p>
                     <p className="ss">Do have an account? <Link to="login">Sign In</Link></p>
                 </div>
             </div>
